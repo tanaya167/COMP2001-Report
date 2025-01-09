@@ -1,0 +1,425 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Trail Service API",
+      "version": "1.0.0",
+      "description": "API documentation for managing trail owners, trails, location points, and trail-locationpoint relationships."
+    },
+    "servers": [
+      {
+        "url": "http://127.0.0.1:5000",
+        "description": "Local development server"
+      }
+    ],
+    "paths": {
+      "/owners": {
+        "get": {
+          "summary": "Get all trail owners",
+          "operationId": "getAllOwners",
+          "tags": ["Owners"],
+          "responses": {
+            "200": {
+              "description": "A list of all trail owners",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "id": 4,
+                      "name": "Martha Jones",
+                      "contact": "MarthaJones@unit.com"
+                    },
+                    {
+                      "id": 5,
+                      "name": "Rose Tyler",
+                      "contact": "RoseTyler@badwolf.com"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/owners/{owner_id}": {
+        "get": {
+          "summary": "Get a specific trail owner by ID",
+          "operationId": "getOwnerById",
+          "tags": ["Owners"],
+          "parameters": [
+            {
+              "name": "owner_id",
+              "in": "path",
+              "required": true,
+              "description": "ID of the owner to fetch",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Details of the specified trail owner",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 4,
+                    "name": "Martha Jones",
+                      "contact": "MarthaJones@unit.com"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Owner not found"
+            }
+          }
+        }
+      },
+      "/trails": {
+        "get": {
+          "summary": "Get all trails",
+          "operationId": "getAllTrails",
+          "tags": ["Trails"],
+          "responses": {
+            "200": {
+              "description": "A list of all trails",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "id": 1,
+                      "name": "Mountain Trail",
+                      "length": 5.5,
+                      "difficulty": "Moderate"
+                    },
+                    {
+                      "id": 2,
+                      "name": "River Path",
+                      "length": 3.2,
+                      "difficulty": "Easy"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new trail",
+          "operationId": "createTrail",
+          "tags": ["Trails"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "length": {
+                      "type": "number"
+                    },
+                    "difficulty": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["name", "length", "difficulty"]
+                },
+                "example": {
+                  "name": "Sunset Trail",
+                  "length": 4.5,
+                  "difficulty": "Easy"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Trail successfully created",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 3,
+                    "name": "Sunset Trail",
+                    "length": 4.5,
+                    "difficulty": "Easy"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      },
+      "/trails/{trail_id}": {
+        "get": {
+          "summary": "Get a specific trail by ID",
+          "operationId": "getTrailById",
+          "tags": ["Trails"],
+          "parameters": [
+            {
+              "name": "trail_id",
+              "in": "path",
+              "required": true,
+              "description": "ID of the trail to fetch",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Details of the specified trail",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 1,
+                    "name": "Mountain Trail",
+                    "length": 5.5,
+                    "difficulty": "Moderate"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Trail not found"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update an existing trail",
+          "operationId": "updateTrail",
+          "tags": ["Trails"],
+          "parameters": [
+            {
+              "name": "trail_id",
+              "in": "path",
+              "required": true,
+              "description": "ID of the trail to update",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "length": {
+                      "type": "number"
+                    },
+                    "difficulty": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["name", "length", "difficulty"]
+                },
+                "example": {
+                  "name": "Updated Trail",
+                  "length": 6.0,
+                  "difficulty": "Hard"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Trail successfully updated",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 1,
+                    "name": "Updated Trail",
+                    "length": 6.0,
+                    "difficulty": "Hard"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Trail not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a trail",
+          "operationId": "deleteTrail",
+          "tags": ["Trails"],
+          "parameters": [
+            {
+              "name": "trail_id",
+              "in": "path",
+              "required": true,
+              "description": "ID of the trail to delete",
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Trail successfully deleted"
+            },
+            "404": {
+              "description": "Trail not found"
+            }
+          }
+        }
+      },
+      "/trail-locationpoint": {
+        "get": {
+          "summary": "Get all trail-locationpoint relationships",
+          "operationId": "getAllTrailLocationPoints",
+          "tags": ["TrailLocationPoint"],
+          "responses": {
+            "200": {
+              "description": "A list of all trail-locationpoint relationships",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "trail_id": 1,
+                      "location_point_id": 101
+                    },
+                    {
+                      "trail_id": 2,
+                      "location_point_id": 102
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new trail-locationpoint relationship",
+          "operationId": "createTrailLocationPoint",
+          "tags": ["TrailLocationPoint"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "trail_id": {
+                      "type": "integer"
+                    },
+                    "location_point_id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": ["trail_id", "location_point_id"]
+                },
+                "example": {
+                  "trail_id": 1,
+                  "location_point_id": 101
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Trail-locationpoint relationship successfully created",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "trail_id": 1,
+                    "location_point_id": 101
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      },
+      "/locationpoint": {
+        "get": {
+          "summary": "Get all location points",
+          "operationId": "getAllLocationPoints",
+          "tags": ["LocationPoint"],
+          "responses": {
+            "200": {
+              "description": "A list of all location points",
+              "content": {
+                "application/json": {
+                  "example": [
+                    {
+                      "id": 101,
+                      "latitude": 34.0522,
+                      "longitude": -118.2437
+                    },
+                    {
+                      "id": 102,
+                      "latitude": 36.7783,
+                      "longitude": -119.4179
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new location point",
+          "operationId": "createLocationPoint",
+          "tags": ["LocationPoint"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["latitude", "longitude"]
+                },
+                "example": {
+                  "latitude": 37.7749,
+                  "longitude": -122.4194
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Location point successfully created",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 103,
+                    "latitude": 37.7749,
+                    "longitude": -122.4194
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  
